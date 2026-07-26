@@ -57,8 +57,10 @@ input_data = pd.DataFrame({
     "region_southeast": [1 if region == "southeast" else 0],
     "region_southwest": [1 if region == "southwest" else 0]
 })
-prediction = model.predict(input_data)
-st.success(f"Predicted Insurance Charges : ${prediction[0]:,.2f}")
+
+if st.button("Predict Insurance Cost"):
+    prediction = model.predict(input_data)
+    st.success(f"Predicted Insurance Charges: ${prediction[0]:,.2f}")
 
 st.markdown("---")
 st.caption("Developed using Python, Scikit-Learn, Streamlit & Linear Regression")
