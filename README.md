@@ -10,7 +10,7 @@ The application takes user information such as Age, Gender, BMI, Number of Child
 
 # Health Insurance Cost Prediction
 
-🚀 Live Demo: https://health-insurance-prediction.streamlit.app
+🚀 Live Demo: https://health-insurance-prediction-aiml.streamlit.app/
 
 ## Features
 - Predicts health insurance charges
