@@ -20,85 +20,107 @@ df=df.drop_duplicates()
 print(df)
 print(df.dtypes)
 # EDA
-plt.figure(figsize =(8,5))
+# plt.figure(figsize =(8,5))
 
-sns.histplot(df["age"],bins=20,kde=True)
+# sns.histplot(df["age"],bins=20,kde=True)
 
-plt.title("Age Distribution")
+# plt.title("Age Distribution")
 
-plt.show()
-plt.figure(figsize=(8,5))
+# plt.show()
+# plt.figure(figsize=(8,5))
 
-sns.histplot(df["bmi"],bins=20,kde=True)
+# sns.histplot(df["bmi"],bins=20,kde=True)
 
-plt.title("BMI Distribution")
+# plt.title("BMI Distribution")
 
-plt.show()
+# plt.show()
 
-plt.figure(figsize=(8,5))
+# plt.figure(figsize=(8,5))
 
-sns.histplot(df["charges"],bins=20,kde=True)
+# sns.histplot(df["charges"],bins=20,kde=True)
 
-plt.title("Insurance Charges Distribution")
+# plt.title("Insurance Charges Distribution")
 
-plt.show()
-sns.countplot(x="sex",data=df)
+# plt.show()
+# sns.countplot(x="sex",data=df)
 
-plt.title("Gender Count")
+# plt.title("Gender Count")
 
-plt.show()
+# plt.show()
 
-sns.countplot(x="smoker",data=df)
+# sns.countplot(x="smoker",data=df)
 
-plt.title("Smoker Count")
+# plt.title("Smoker Count")
 
-plt.show()
+# plt.show()
 
-sns.countplot(x="region",data=df)
+# sns.countplot(x="region",data=df)
 
-plt.title("Region Distribution")
+# plt.title("Region Distribution")
 
-plt.show()
+# plt.show()
 
-plt.figure(figsize=(8,5))
 
-sns.boxplot(y=df["bmi"])
 
-plt.title("BMI Outliers")
+# plt.figure(figsize=(8,5))
 
-plt.show()
+# sns.boxplot(y=df["bmi"])
 
-plt.figure(figsize=(8,5))
+# plt.title("BMI Outliers")
 
-sns.boxplot(y=df["charges"])
+# plt.show()
 
-plt.title("Charges Outliers")
 
-plt.show()
 
-plt.figure(figsize=(8,5))
+# plt.figure(figsize=(8,5))
 
-sns.scatterplot(x="age",y="charges",data=df)
+# sns.boxplot(y=df["charges"])
 
-plt.title("Age vs Charges")
+# plt.title("Charges Outliers")
 
-plt.show()
+# plt.show()
 
-plt.figure(figsize=(8,5))
 
-sns.scatterplot(x="bmi",y="charges",data=df)
 
-plt.title("BMI vs Charges")
+# plt.figure(figsize=(8,5))
 
-plt.show()
+# sns.scatterplot(x="age",y="charges",data=df)
 
-plt.figure(figsize=(8,5))
+# plt.title("Age vs Charges")
 
-sns.boxplot(x="smoker",y="charges",data=df)
+# plt.show()
 
-plt.title("Smoker vs Charges")
 
-plt.show()
+
+# plt.figure(figsize=(8,5))
+
+# sns.scatterplot(x="bmi",y="charges",data=df,hue="smoker")
+
+# plt.title("BMI vs Charges")
+
+# plt.show()
+
+
+
+# plt.figure(figsize=(8,5))
+
+# sns.boxplot(x="smoker",y="charges",data=df)
+
+# plt.title("Smoker vs Charges")
+
+
+
+# plt.figure(figsize=(6,5))
+# sns.boxplot(x="region", y="charges", data=df)
+# plt.title("Region vs Insurance Charges")
+# plt.show()
+
+# plt.figure(figsize=(6,5))
+# sns.boxplot(x="children", y="charges", data=df)
+# plt.title("Children vs Insurance Charges")
+# plt.show()
+
+# plt.show()
 # CORELATION OF ALL THE NUMARICAL SET
 numeric_df=df.select_dtypes(include=np.number)
 
@@ -113,6 +135,22 @@ plt.show()
 categorical_features = ["sex", "smoker", "region"]
 numerical_features = ["age", "bmi", "children"]
 df = pd.get_dummies(df, columns=["sex", "smoker", "region"])
+
+def bmi_category(bmi):
+    if bmi < 18.5:
+        return "Underweight"
+    elif bmi < 25:
+        return "Normal"
+    elif bmi < 30:
+        return "Overweight"
+    else:
+        return "Obese"
+
+df["bmi_category"] = df["bmi"].apply(bmi_category)
+df = pd.get_dummies(df, columns=["bmi_category"], drop_first=True)
+
+df["smoker_bmi"] = df["smoker_yes"] * df["bmi"]
+
 X = df.drop("charges", axis=1)
 y = df["charges"]
 # print(X.head())
@@ -173,39 +211,9 @@ sns.barplot(data=coef, x="Coefficient", y="Feature")
 plt.title("Feature Impact on Insurance Charges")
 plt.show()
 
-original_df = pd.read_csv("insurance.csv")
+print(X.columns.tolist())
+print(model.feature_names_in_)
 
-plt.figure(figsize=(6,5))
-sns.boxplot(x="smoker", y="charges", data=original_df)
-plt.title("Smoking Status vs Insurance Charges")
-plt.show()
-
-original_df = pd.read_csv("insurance.csv")
-
-plt.figure(figsize=(6,5))
-sns.boxplot(x="smoker", y="charges", data=original_df)
-plt.title("Smoking Status vs Insurance Charges")
-plt.show()
-
-plt.figure(figsize=(6,5))
-sns.scatterplot(x="age", y="charges", data=original_df)
-plt.title("Age vs Insurance Charges")
-plt.show()
-
-plt.figure(figsize=(6,5))
-sns.scatterplot(x="bmi", y="charges", data=original_df)
-plt.title("BMI vs Insurance Charges")
-plt.show()
-
-plt.figure(figsize=(6,5))
-sns.boxplot(x="region", y="charges", data=original_df)
-plt.title("Region vs Insurance Charges")
-plt.show()
-
-plt.figure(figsize=(6,5))
-sns.boxplot(x="children", y="charges", data=original_df)
-plt.title("Children vs Insurance Charges")
-plt.show()
 
 import pickle
 pickle.dump(model, open("model.pkl", "wb"))
@@ -224,10 +232,17 @@ sample = pd.DataFrame({
     "region_northeast":[0],
     "region_northwest":[1],
     "region_southeast":[0],
-    "region_southwest":[0]
+    "region_southwest":[0],
+
+    "bmi_category_Obese": [0],
+    "bmi_category_Overweight": [1],
+    "bmi_category_Underweight": [0],
+    "smoker_bmi": [28.5]
 })
+print(X.columns.tolist())
 prediction = loaded_model.predict(sample)
 
 print("Predicted Insurance Cost:", prediction[0])
 
 print(X.columns.tolist())
+print(model.feature_names_in_)
